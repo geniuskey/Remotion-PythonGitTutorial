@@ -94,8 +94,8 @@ export const OpeningScene: React.FC = () => {
         </AbsoluteFill>
       </Sequence>
 
-      {/* Solution */}
-      <Sequence from={Math.floor(11 * fps)} durationInFrames={Math.floor(4 * fps)}>
+      {/* Solution - extended to fill the scene */}
+      <Sequence from={Math.floor(11 * fps)} durationInFrames={Math.floor(12 * fps)}>
         <AbsoluteFill className="flex items-center justify-center">
           <div
             className="text-center"
@@ -107,6 +107,26 @@ export const OpeningScene: React.FC = () => {
             <div className="text-7xl mb-4">💡</div>
             <h1 className="text-5xl font-bold text-white mb-2">해결책이 있습니다!</h1>
             <p className="text-2xl text-green-400">Git & GitHub</p>
+
+            {/* Additional content appearing after initial reveal */}
+            <div
+              className="mt-8 flex gap-6 justify-center"
+              style={{
+                opacity: interpolate(frame, [15 * fps, 16 * fps], [0, 1], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                }),
+              }}
+            >
+              <div className="bg-orange-500/20 border border-orange-500/50 rounded-xl px-6 py-3">
+                <span className="text-3xl mr-2">📁</span>
+                <span className="text-xl text-orange-300">버전 관리</span>
+              </div>
+              <div className="bg-purple-500/20 border border-purple-500/50 rounded-xl px-6 py-3">
+                <span className="text-3xl mr-2">👥</span>
+                <span className="text-xl text-purple-300">팀 협업</span>
+              </div>
+            </div>
           </div>
         </AbsoluteFill>
       </Sequence>
