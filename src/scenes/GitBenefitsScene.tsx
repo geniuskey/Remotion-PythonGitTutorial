@@ -1,4 +1,5 @@
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { SPRING_BOUNCY } from "../Composition";
 
 export const GitBenefitsScene: React.FC = () => {
   const frame = useCurrentFrame();
@@ -41,7 +42,7 @@ export const GitBenefitsScene: React.FC = () => {
           const cardScale = spring({
             frame,
             fps,
-            config: { damping: 15, stiffness: 100 },
+            config: SPRING_BOUNCY,
             delay: Math.floor(cardDelay * fps),
           });
 

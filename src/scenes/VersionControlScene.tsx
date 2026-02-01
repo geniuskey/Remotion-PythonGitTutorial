@@ -1,4 +1,5 @@
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { SPRING_BOUNCY } from "../Composition";
 
 export const VersionControlScene: React.FC = () => {
   const frame = useCurrentFrame();
@@ -50,7 +51,7 @@ export const VersionControlScene: React.FC = () => {
             const itemScale = spring({
               frame,
               fps,
-              config: { damping: 15 },
+              config: SPRING_BOUNCY,
               delay: Math.floor(itemDelay * fps),
             });
 

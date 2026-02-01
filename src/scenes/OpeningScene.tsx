@@ -1,4 +1,5 @@
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Sequence } from "remotion";
+import { SPRING_BOUNCY, SPRING_SMOOTH } from "../Composition";
 
 export const OpeningScene: React.FC = () => {
   const frame = useCurrentFrame();
@@ -7,7 +8,7 @@ export const OpeningScene: React.FC = () => {
   const questionScale = spring({
     frame,
     fps,
-    config: { damping: 12, stiffness: 100 },
+    config: SPRING_BOUNCY,
   });
 
   const files = [
@@ -26,7 +27,7 @@ export const OpeningScene: React.FC = () => {
   const solutionProgress = spring({
     frame,
     fps,
-    config: { damping: 200 },
+    config: SPRING_SMOOTH,
     delay: Math.floor(11 * fps),
   });
 
@@ -58,7 +59,7 @@ export const OpeningScene: React.FC = () => {
                 extrapolateRight: "clamp",
               });
               const fileX = interpolate(
-                spring({ frame: fileFrame, fps, config: { damping: 200 } }),
+                spring({ frame: fileFrame, fps, config: SPRING_SMOOTH }),
                 [0, 1],
                 [80, 0]
               );

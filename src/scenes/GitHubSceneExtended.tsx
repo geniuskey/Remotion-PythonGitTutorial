@@ -1,4 +1,5 @@
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { SPRING_BOUNCY } from "../Composition";
 
 export const GitHubSceneExtended: React.FC = () => {
   const frame = useCurrentFrame();
@@ -7,7 +8,7 @@ export const GitHubSceneExtended: React.FC = () => {
   const logoScale = spring({
     frame,
     fps,
-    config: { damping: 15, stiffness: 100 },
+    config: SPRING_BOUNCY,
   });
 
   const features = [

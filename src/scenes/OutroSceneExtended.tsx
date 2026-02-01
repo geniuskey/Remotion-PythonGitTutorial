@@ -1,4 +1,5 @@
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { SPRING_BOUNCY } from "../Composition";
 
 export const OutroSceneExtended: React.FC = () => {
   const frame = useCurrentFrame();
@@ -7,7 +8,7 @@ export const OutroSceneExtended: React.FC = () => {
   const titleScale = spring({
     frame,
     fps,
-    config: { damping: 15, stiffness: 100 },
+    config: SPRING_BOUNCY,
   });
 
   const steps = [
@@ -48,7 +49,7 @@ export const OutroSceneExtended: React.FC = () => {
           const stepScale = spring({
             frame,
             fps,
-            config: { damping: 15, stiffness: 100 },
+            config: SPRING_BOUNCY,
             delay: Math.floor(stepDelay * fps),
           });
 
@@ -98,7 +99,7 @@ export const OutroSceneExtended: React.FC = () => {
           transform: `scale(${spring({
             frame,
             fps,
-            config: { damping: 12 },
+            config: SPRING_BOUNCY,
             delay: Math.floor(7 * fps),
           })})`,
         }}

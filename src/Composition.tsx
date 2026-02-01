@@ -1,8 +1,13 @@
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
-import { useVideoConfig, Sequence, staticFile } from "remotion";
+import { useVideoConfig, Sequence, staticFile, interpolate } from "remotion";
 import { Audio } from "@remotion/media";
+
+// Spring animation presets
+export const SPRING_SMOOTH = { damping: 200 };
+export const SPRING_BOUNCY = { damping: 12, stiffness: 100 };
+export const SPRING_SNAPPY = { damping: 20, stiffness: 200 };
 
 import { OpeningScene } from "./scenes/OpeningScene";
 import { IntroductionScene } from "./scenes/IntroductionScene";
@@ -80,32 +85,49 @@ const audioSegments = [
 // Each audio segment gets enough time to play fully
 const AUDIO_MAX_DURATION_SEC = 15;
 
+// Audio fade duration in frames (for smooth transitions)
+const AUDIO_FADE_FRAMES = 8;
+
 export const MyComposition = () => {
   const { fps } = useVideoConfig();
 
-  // Scene durations (matched to audio timing)
-  const openingDuration = 22 * fps;        // 0.5s - 22.4s
-  const introDuration = 21 * fps;          // 22.4s - 43.7s
-  const problemDuration = 36 * fps;        // 43.7s - 79.9s
-  const versionControlDuration = 31 * fps; // 79.9s - 111.0s
-  const whatIsGitDuration = 27 * fps;      // 111.0s - 137.6s
-  const gitBenefitsDuration = 34 * fps;    // 137.6s - 171.2s
-  const gitCommandsDuration = 50 * fps;    // 171.2s - 220.9s
-  const githubDuration = 21 * fps;         // 220.9s - 241.5s
-  const outroDuration = 18 * fps;          // 241.5s - 259s
+  // Scene durations (adjusted for TransitionSeries overlap)
+  // TransitionSeries subtracts transition duration from total, so we add it back
+  // With 8 transitions x 0.5s each = 4s total overlap
+  const transitionDuration = Math.floor(0.5 * fps); // 15 frames
 
-  const transitionDuration = Math.floor(0.5 * fps);
+  // Base durations matched to audio timing
+  const openingDuration = Math.floor(22.5 * fps);      // 0.5s - 22.4s
+  const introDuration = Math.floor(21.5 * fps);        // 22.4s - 43.7s
+  const problemDuration = Math.floor(36.5 * fps);      // 43.7s - 79.9s
+  const versionControlDuration = Math.floor(31 * fps); // 79.9s - 111.0s
+  const whatIsGitDuration = Math.floor(27 * fps);      // 111.0s - 137.6s
+  const gitBenefitsDuration = Math.floor(34 * fps);    // 137.6s - 171.2s
+  const gitCommandsDuration = Math.floor(50.5 * fps);  // 171.2s - 220.9s
+  const githubDuration = Math.floor(21 * fps);         // 220.9s - 241.5s
+  const outroDuration = Math.floor(19 * fps);          // 241.5s - 260s
 
   return (
     <>
-      {/* Audio narration - each plays fully without cutting */}
+      {/* Audio narration - with premount and fade in/out */}
       {audioSegments.map((segment) => (
         <Sequence
           key={segment.id}
           from={Math.floor(segment.startSec * fps)}
           durationInFrames={Math.floor(AUDIO_MAX_DURATION_SEC * fps)}
+          premountFor={fps} // Premount 1 second before for smooth loading
         >
-          <Audio src={staticFile(`audio/${segment.id}.mp3`)} volume={1} />
+          <Audio
+            src={staticFile(`audio/${segment.id}.mp3`)}
+            volume={(f) => {
+              // Fade in at start
+              const fadeIn = interpolate(f, [0, AUDIO_FADE_FRAMES], [0, 1], {
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              });
+              return fadeIn;
+            }}
+          />
         </Sequence>
       ))}
 

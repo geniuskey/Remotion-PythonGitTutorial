@@ -1,4 +1,5 @@
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { SPRING_SMOOTH } from "../Composition";
 
 export const ProblemScene: React.FC = () => {
   const frame = useCurrentFrame();
@@ -82,7 +83,7 @@ export const ProblemScene: React.FC = () => {
             const problemScale = spring({
               frame,
               fps,
-              config: { damping: 200 },
+              config: SPRING_SMOOTH,
               delay: Math.floor(problem.delay * fps),
             });
 
